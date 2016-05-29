@@ -1,14 +1,15 @@
 FROM dockenizer/alpine
 MAINTAINER Jacques Moati <jacques@moati.net>
 
-RUN apk add --update nginx
+RUN apk --update add nginx && \
 
-RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
+    ln -sf /dev/stdout /var/log/nginx/access.log && \
     ln -sf /dev/stderr /var/log/nginx/error.log && \
     mkdir /etc/nginx/sites-enabled/ && \
     rm -rf /var/www/* && \
-    touch /var/www/favicon.ico
+    touch /var/www/favicon.ico && \
 
+    rm -rf /var/cache/apk/*
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY default.conf /etc/nginx/sites-enabled/default.conf
@@ -17,4 +18,3 @@ COPY index.html /var/www/index.html
 EXPOSE 80 443
 CMD ["nginx", "-g", "daemon off;"]
 
-RUN rm -rf /var/cache/apk/*
